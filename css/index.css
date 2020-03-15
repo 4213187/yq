@@ -1,0 +1,97 @@
+body {
+
+    background-color: rgb(24, 172, 180);
+}
+a{
+    text-decoration:none;
+}
+#data {
+    position: absolute;
+    width: 960px;
+
+    left: 300px;
+    top: 20px;
+    background-color: white;
+    border-radius: 10px 10px 10px 10px;
+}
+
+#table {
+    background-color: #eeeeee;
+}
+
+
+#tongji {
+    text-align: center;
+    font-size: 30px;
+}
+
+#middle{
+    height: 20px;
+}
+#visitor{
+    position: absolute;
+    left: 0px;
+    font-size: 15px;
+    color: #dbdbdb;
+}
+
+#zyw{
+    position: absolute;
+    right: 0px;
+    font-size: 15px;
+
+    color: #dbdbdb;
+}
+
+#button{
+    position: absolute;
+    right: 60px;
+}
+
+
+
+.fenge {
+    height: 2px;
+    background-color: gainsboro;
+}
+
+.block{
+
+    width: 300px;
+    height: 100px;
+    display: inline-block;
+    text-align: center;
+    font-size: 20px;
+}
+
+.input{
+    display: inline-block;
+    width: 250px;
+}
+
+
+.xianyouquezhen{
+  color: hotpink;
+}
+.xianyouyisi{
+    color: darkorange;
+}
+.xianyouzhongzheng{
+    color:mediumslateblue;
+}
+.leijiquezhen{
+    color: red;
+}
+.leijizhiyu{
+    color: lightseagreen;
+}
+.leijisiwang{
+    color: #3c3c3c;
+}
+.zuori{
+    font-size: 10px;
+}
+
+
+
+

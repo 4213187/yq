@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>疫情数据统计</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angularjs/angular.min.js"></script>
+    <script>
+        var app = angular.module('yq', []);
+
+        app.controller('indexController', function ($scope, $http) {
+            //国内疫情
+            $scope.domestic = {};
+            $scope.getDomestic = function () {
+
+                $http.get('http://localhost:8080/index/domestic').success(
+                    function (response) {
+                        $scope.domestic = response.newslist[0].desc;
+
+                    }
+                );
+            }
+
+            //地区疫情
+            $scope.districts = {};
+            $scope.getDistrict = function () {
+
+                $http.get('http://localhost:8080/index/district').success(
+                    function (response) {
+                        $scope.districts = response.newslist;
+
+                    }
+                );
+            }
+            //网站累计访问人数
+            $scope.visitor = "";
+            $scope.getVisitor = function () {
+
+                $http.get('http://localhost:8080/index/visitor').success(
+                    function (response) {
+                        $scope.visitor = response;
+                        console.log($scope.visitor);
+
+                    }
+                );
+            }
+            //附近疫情
+            $scope.nearby = {};
+            $scope.province = "广东省";
+            $scope.city = "深圳市";
+            $scope.county = "龙岗区";
+            $scope.getNearby = function () {
+
+                $http.post('http://localhost:8080/index/nearby?province=' + $scope.province + '&city=' + $scope.city + "&district=" + $scope.county).success(
+                    function (response) {
+
+                        if (response.code != "200") {
+                            alert("无相关数据");
+                        } else {
+                            $scope.nearby = response.newslist;
+                        }
+                    }
+                );
+            }
+        });
+    </script>
+</head>
+<body ng-app="yq" ng-controller="indexController" ng-init="getDomestic();getDistrict();getVisitor()">
+
+<div id="data">
+    <!--    国内统计div-->
+    <div id="tongji">
+        国内疫情
+        <!--    弄个分割线-->
+        <div class="fenge"></div>
+
+        <!--     div 为inline-block 6块   -->
+        <div class="block">
+            现有确诊<br>
+            <span class="xianyouquezhen">{{domestic.currentConfirmedCount}}</span><br>
+            <span class="zuori">昨日<span class="xianyouquezhen">{{domestic.currentConfirmedIncr}}</span></span>
+        </div>
+        <div class="block">
+            现有疑似<br>
+            <span class="xianyouyisi">{{domestic.suspectedCount}}</span><br>
+            <span class="zuori">昨日<span class="xianyouyisi">{{domestic.suspectedIncr}}</span></span>
+        </div>
+        <div class="block">
+            现有重症<br>
+            <span class="xianyouzhongzheng"> {{domestic.seriousCount}}</span><br>
+            <span class="zuori">昨日<span class="xianyouzhongzheng">{{domestic.seriousIncr}}</span></span>
+        </div>
+        <div class="block">
+            累计确诊<br>
+            <span class="leijiquezhen"> {{domestic.confirmedCount}}</span><br>
+            <span class="zuori">昨日<span class="leijiquezhen">{{domestic.confirmedIncr}}</span></span>
+        </div>
+        <div class="block">
+            累计治愈<br>
+            <span class="leijizhiyu">  {{domestic.curedCount}}</span><br>
+            <span class="zuori">昨日<span class="leijizhiyu">{{domestic.curedIncr}}</span></span>
+        </div>
+        <div class="block">
+            累计死亡<br>
+            <span class="leijisiwang">  {{domestic.deadCount}}</span><br>
+            <span class="zuori">昨日<span class="leijisiwang">{{domestic.deadIncr}}</span></span>
+        </div>
+
+        <div id="middle">
+            <!--    浏览人次    -->
+            <span id="visitor">共{{visitor}}人次已浏览</span>
+            <!--   更多资源    -->
+            <span id="zyw">更多资源访问404zyw.com</span>
+        </div>
+        <div class="fenge"></div>
+    </div>
+    <div id="table">
+        <table class="table table-hover">
+
+            <caption style="text-align:center">国内各地区疫情</caption>
+            <thead>
+            <tr>
+                <th>地区</th>
+                <th>确诊</th>
+                <th>疑似</th>
+                <th>治愈</th>
+                <th>死亡</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="district in districts">
+                <td>{{district.provinceName}}</td>
+                <td>{{district.confirmedCount}}</td>
+                <td>{{district.suspectedCount}}</td>
+                <td>{{district.curedCount}}</td>
+                <td>{{district.deadCount}}</td>
+            </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+    <!--        底部 查询周边疫情-->
+    <div id="zhoubian">
+
+        <div class="input">
+            <div class="input-group">
+                <span class="input-group-addon">省份:</span>
+                <input type="text" class="form-control" placeholder="省份" ng-model="province">
+            </div>
+        </div>
+        <div class="input">
+            <div class="input-group">
+                <span class="input-group-addon">城市:</span>
+                <input type="text" class="form-control" placeholder="城市" ng-model="city">
+            </div>
+        </div>
+        <div class="input">
+            <div class="input-group">
+                <span class="input-group-addon">区县:</span>
+                <input type="text" class="form-control" placeholder="区县" ng-model="county">
+            </div>
+        </div>
+
+        <button id="button" class="btn btn-primary"
+                type="button" ng-click="getNearby()"> 查询周边
+        </button>
+
+        <div id="table2">
+            <table class="table table-hover">
+
+                <caption style="text-align:center">附近疫情</caption>
+                <thead>
+                <tr>
+                    <th>地点名称</th>
+                    <th>具体地址</th>
+                    <th>经度</th>
+                    <th>维度</th>
+                    <th>消息来源</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="near in nearby">
+                    <td>{{near.locale}}</td>
+                    <td>{{near.address}}</td>
+                    <td>{{near.lng}}</td>
+                    <td>{{near.lat}}</td>
+                    <td>{{near.source}}</td>
+
+                </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+
+
+</div>
+</div>
+
+
+</body>
+</html>
